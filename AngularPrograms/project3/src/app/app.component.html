@@ -1,0 +1,17 @@
+<nav>
+  <ul>
+    <li>
+      <a routerLink="/products" routerLinkActive="active"> Home </a>
+    </li>
+
+    <li>
+      <a routerLink="/products/:id" routerLinkActive="active"> About </a>
+    </li>
+
+    <li>
+      <a routerLink="/product/nested/:id" routerLinkActive="active"> Nested Product </a>
+    </li>
+  </ul>
+</nav>
+
+<router-outlet></router-outlet>  <!-- this is where the routed components will be displayed-->

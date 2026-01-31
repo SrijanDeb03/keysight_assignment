@@ -1,0 +1,67 @@
+<h2> This is my Task item component </h2>
+ 
+<!-- if-else part below-->
+<div *ngIf="isShow; else ifNoShow">
+    This part of code will execute if the isShow is true
+</div>
+ 
+<ng-template #ifNoShow>
+    This part of code will execute if the isShow is false
+</ng-template>
+ 
+<!-- ngFor directive -->
+<div>
+    <div>
+        {{movie_title}}
+    </div>
+    <div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th> Title </th>
+                    <th> Director </th>
+                    <th> Cast </th>
+                    <th> Release Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let movie of movies">
+                    <td>{{movie.title}}</td>
+                    <td>{{movie.director}}</td>
+                    <td>{{movie.cast}}</td>
+                    <td>{{movie.releaseDate}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ 
+<br>
+<div>
+    Normal User
+</div>
+ 
+<hr>
+<!-- below are the attribute directives-->
+<div>
+    <h2> Shopping website</h2>
+ 
+    <div>
+        <div [ngClass]="{'highlight':isHighlighted, 'italic':isItalic}">
+            This is the shooping website page for my [ngClass]
+        </div>
+ 
+        <div [ngStyle]="{'color':textColor, 'font-size':fontSize +'px'}">
+            Second div showing the [ngStyle]
+        </div>
+ 
+        <div [ngClass]="{'active':isActive, 'disables': isDisabled}">
+            <button type="button" value="Login"> Login </button>
+        </div>
+ 
+        <input type="text" [(ngModel)]="username">
+        <p> Hello, {{username}}</p>
+ 
+    </div>
+</div>
+ 

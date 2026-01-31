@@ -1,0 +1,24 @@
+<div>
+    <h2> Service: Products</h2>
+    <button type="button" (click)="getProducts()"> Fetch Products</button>
+ 
+    <div>
+        <table class="table" border="1">
+            <thead>
+                <tr>
+                    <th> ID </th>
+                    <th> Name </th>
+                    <th> Price </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of products">
+                    <td>{{p.productId}}</td>
+                    <td>{{p.name}}</td>
+                    <td>{{p.price}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ 

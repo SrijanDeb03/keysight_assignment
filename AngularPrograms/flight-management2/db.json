@@ -1,0 +1,14 @@
+{
+  "flights": [
+    {
+      "id": 1,
+      "flightNo": "AI101",
+      "airline": "Indigo",
+      "from": "DEL",
+      "to": "MUM",
+      "time": "2025-01-20T10:30",
+      "price": 4500,
+      "status": "On Time"
+    }
+  ]
+}

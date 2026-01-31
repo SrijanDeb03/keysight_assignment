@@ -1,0 +1,17 @@
+header {
+  background: linear-gradient(135deg, #1e3799, #4a69bd);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+header p {
+  margin-top: 5px;
+  font-style: italic;
+  opacity: 0.9;
+}

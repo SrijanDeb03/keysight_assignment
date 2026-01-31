@@ -1,0 +1,21 @@
+<div class="flight-container">
+  <h3>Available Flights</h3>
+
+  <div
+    *ngFor="let flight of flights"
+    class="flight-card"
+    [ngClass]="{
+      'on-time': flight.status === 'On Time',
+      'delayed': flight.status === 'Delayed',
+      'cancelled': flight.status === 'Cancelled'
+    }"
+  >
+    <p><strong>Flight:</strong> {{ flight.number }}</p>
+    <p>{{ flight.source }} → {{ flight.destination }}</p>
+    <p>Departure: {{ flight.time }}</p>
+
+    <p *ngIf="flight.status === 'On Time'"> On Time</p>
+    <p *ngIf="flight.status === 'Delayed'"> Delayed</p>
+    <p *ngIf="flight.status === 'Cancelled'"> Cancelled</p>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Laptop Lenovo",
+      "description": "Laptop with latest  i7",
+      "price": 95000,
+      "category": "Electronics"
+    },
+    {
+      "id": "2",
+      "name": "The great Book",
+      "description": "Fiction book",
+      "price": 450,
+      "category": "Books"
+    },
+    {
+      "id": "3",
+      "name": " Smart Watch",
+      "description": "Wearable Device",
+      "price": 250,
+      "category": "Electronics"
+    },
+    {
+      "id": 4,
+      "name": "Polo tshirt",
+      "description": "Polo t-shirt",
+      "price": 800,
+      "category": "Clothing"
+    },
+    {
+      "id": 0,
+      "name": "Smart Watch",
+      "description": "Wearable device",
+      "price": 250,
+      "category": "electronics"
+    },
+    {
+      "id": 0,
+      "name": "Smart Watch",
+      "description": "Wearable device",
+      "price": 250,
+      "category": "electronics"
+    }
+  ]
+}

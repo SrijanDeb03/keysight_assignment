@@ -1,0 +1,34 @@
+<h2> Products </h2>
+<div style="padding: 20px;">
+   <button (click)="getAllProducts()"> GET Products</button>
+   <button (click)="addProduct()"> POST(Add) Product</button>
+   <button (click)="updateProduct()"> PUT(Update) Product</button>
+   <button (click)="deleteProduct()"> DELETE Product</button>
+ 
+  <!-- filtering drop-down-->
+  <select [(ngModel)] = "selectedCategory">
+    <option value="All"> -- All -- </option>
+    <option value="Electronics"> Electronics </option>
+    <option value="books"> Books </option>
+    <option value="Clothing"> Clothing </option>
+  </select>
+ 
+  <!-- sorting drop-down-->
+  <select [(ngModel)] = "sortOption">
+    <option value=""> -- Sort By -- </option>
+    <option value="priceAsc"> Price: Low to High </option>
+    <option value="priceDesc"> Price: High to Low </option>
+    <option value="nameAsc"> Name: A-Z</option>
+    <option value="nameDesc"> Name: Z-A</option>
+  </select>
+ 
+  <div *ngIf="products.length">
+   <h3> Products: </h3>
+   <ul>
+    <li *ngFor="let product of products | productCategory:selectedCategory | productSort:sortOption">
+       {{product.name}} - INR. {{product.price | currency:'USD'}}
+    </li>
+   </ul>
+  </div>
+ 
+</div>

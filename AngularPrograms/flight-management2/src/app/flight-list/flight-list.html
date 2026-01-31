@@ -1,0 +1,53 @@
+<h2>Flight Management System</h2>
+ 
+<table>
+  <tr>
+    <th>Flight No</th>
+    <th>Airline</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Time</th>
+    <th>Price</th>
+    <th>Status</th>
+    <th>Actions</th>
+  </tr>
+ 
+  <tr *ngFor="let f of flights">
+    <td>{{ f.flightNo }}</td>
+    <td>{{ f.airline | uppercase }}</td>
+    <td>{{ f.from }}</td>
+    <td>{{ f.to }}</td>
+    <td>{{ f.time | date:'hh:mm a' }}</td>
+    <td>{{ f.price | currency:'₹' }}</td>
+    <td>{{ f.status }}</td>
+    <td>
+      <button (click)="editFlight(f)">Edit</button>
+      <button (click)="deleteFlight(f.id)">Delete</button>
+    </td>
+  </tr>
+</table>
+ 
+<hr>
+ 
+<h3>Add / Update Flight</h3>
+ 
+<form (ngSubmit)="saveFlight()">
+  <input [(ngModel)]="flight.flightNo" name="flightNo" placeholder="Flight No" required>
+  <input [(ngModel)]="flight.airline" name="airline" placeholder="Airline" required>
+  <input [(ngModel)]="flight.from" name="from" placeholder="From" required>
+  <input [(ngModel)]="flight.to" name="to" placeholder="To" required>
+  <input type="datetime-local" [(ngModel)]="flight.time" name="time" required>
+  <input type="number" [(ngModel)]="flight.price" name="price" required>
+ 
+  <select [(ngModel)]="flight.status" name="status">
+    <option>On Time</option>
+    <option>Delayed</option>
+    <option>Cancelled</option>
+  </select>
+ 
+  <button type="submit">Save</button>
+  <button type="button" (click)="resetForm()">Cancel</button>
+</form>
+ 
+ 
+ 

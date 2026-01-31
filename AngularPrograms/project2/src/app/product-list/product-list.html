@@ -1,0 +1,22 @@
+<p>product-list </p>
+ 
+<h2> Product List</h2>
+<ul>
+    <li *ngFor="let product of productsNew" (click)="selectProduct(product)">
+      {{product.name}} with price - INR.{{product.price}} knwon for {{product.description}}
+    </li>
+</ul>
+ 
+<hr />
+ 
+<app-product-detail [product]="selectedProduct"></app-product-detail>
+
+<app-product-detail [product]="selectedProduct"
+                    (addToCart)="handleAddToCart($event)">
+</app-product-detail>
+ 
+<h3> Cart ({{cart.length}})</h3>
+<ul>
+    <li *ngFor="let item of cart"> {{item.name}}</li>
+</ul>
+ 
