@@ -1,0 +1,10 @@
+input, select, textarea {
+  display: block;
+  margin: 5px 0;
+  padding: 6px;
+}
+
+p {
+  color: red;
+  margin: 0;
+}
