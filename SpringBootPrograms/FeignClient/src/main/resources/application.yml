@@ -1,0 +1,15 @@
+server:
+  port: 9292
+ 
+spring:
+  application:
+    name: greetingsuserinfozuulgateway
+zuul:
+  routes:
+    greetingsinfofeignclient:
+      path: /feign/**
+      stripPrefix: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7171/eureka/
