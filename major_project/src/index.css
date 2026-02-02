@@ -1,0 +1,96 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+  /* Midnight Gold Palette */
+  --primary: #d4af37;
+  /* Gold */
+  --primary-hover: #b4941f;
+  --secondary: #0b0f19;
+  /* Dark Navy/Black */
+  --bg-dark: #05080f;
+  /* Deepest Background */
+  --bg-card: rgba(20, 25, 35, 0.7);
+  /* Translucent Card */
+
+  --text-main: #f1f5f9;
+  /* Off-White */
+  --text-muted: #94a3b8;
+  --text-gold: #d4af37;
+
+  --success: #10b981;
+  --danger: #ef4444;
+
+  --radius-lg: 12px;
+  --radius-md: 8px;
+
+  /* Premium Gradients */
+  --gradient-gold: linear-gradient(135deg, #d4af37 0%, #aa8929 100%);
+  --gradient-dark: linear-gradient(180deg, #0b0f19 0%, #1a202c 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-main);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.3s ease;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+/* Glassmorphism for Dark Mode */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-lg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
