@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/flights")
-@CrossOrigin(origins = "http://localhost:3000") // Allow frontend to access
+@CrossOrigin(origins = "http://localhost:3000") 
 public class FlightController {
 
     @Autowired

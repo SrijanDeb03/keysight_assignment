@@ -9,8 +9,32 @@ function FlightList() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // Filter States
+    const [selectedAirlines, setSelectedAirlines] = useState([]);
+    const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+    const [selectedTimes, setSelectedTimes] = useState([]);
+    const [selectedClass, setSelectedClass] = useState('all');
+    const [sortOption, setSortOption] = useState('priceLowHigh');
+
+    // Airline list for dynamic filtering
+    const airlines = [
+        'Air India',
+        'IndiGo',
+        'SpiceJet',
+        'Vistara',
+        'GoFirst',
+        'AirAsia India',
+        'Akasa Air',
+        'Alliance Air'
+    ];
+
+    const timeSlots = [
+        { id: 'morning', label: 'Morning', range: '6AM - 12PM' },
+        { id: 'afternoon', label: 'Afternoon', range: '12PM - 6PM' },
+        { id: 'evening', label: 'Evening', range: '6PM - 12AM' }
+    ];
+
     useEffect(() => {
-        // Corrected URL to /api/flights
         axios.get('http://localhost:8080/api/flights')
             .then(response => {
                 setFlights(response.data);
@@ -23,7 +47,52 @@ function FlightList() {
             });
     }, []);
 
-    const [sortOption, setSortOption] = useState('priceLowHigh'); // Default sort
+    // Get airline name from flight number
+    const getAirlineName = (flightNumber) => {
+        const hash = flightNumber.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return airlines[hash % airlines.length];
+    };
+
+    // Get time slot from departure time
+    const getTimeSlot = (departureTime) => {
+        const hour = new Date(departureTime).getHours();
+        if (hour >= 6 && hour < 12) return 'morning';
+        if (hour >= 12 && hour < 18) return 'afternoon';
+        return 'evening';
+    };
+
+    // Apply all filters
+    useEffect(() => {
+        let result = [...flights];
+
+        // Search filter (handled by SearchBar)
+        // Airline filter
+        if (selectedAirlines.length > 0) {
+            result = result.filter(f => selectedAirlines.includes(getAirlineName(f.flightNumber)));
+        }
+
+        // Price filter
+        if (priceRange.min) {
+            result = result.filter(f => f.economyPrice >= Number(priceRange.min));
+        }
+        if (priceRange.max) {
+            result = result.filter(f => f.economyPrice <= Number(priceRange.max));
+        }
+
+        // Time filter
+        if (selectedTimes.length > 0) {
+            result = result.filter(f => selectedTimes.includes(getTimeSlot(f.departureTime)));
+        }
+
+        // Class filter (based on seat availability)
+        if (selectedClass === 'economy') {
+            result = result.filter(f => f.economySeats > 0);
+        } else if (selectedClass === 'premium') {
+            result = result.filter(f => f.premiumSeats > 0);
+        }
+
+        setFilteredFlights(result);
+    }, [flights, selectedAirlines, priceRange, selectedTimes, selectedClass]);
 
     const handleSearch = ({ from, to }) => {
         if (!from && !to) {
@@ -35,6 +104,22 @@ function FlightList() {
             (to ? f.destination.toLowerCase().includes(to.toLowerCase()) : true)
         );
         setFilteredFlights(filtered);
+    };
+
+    const toggleAirline = (airline) => {
+        setSelectedAirlines(prev =>
+            prev.includes(airline)
+                ? prev.filter(a => a !== airline)
+                : [...prev, airline]
+        );
+    };
+
+    const toggleTime = (timeId) => {
+        setSelectedTimes(prev =>
+            prev.includes(timeId)
+                ? prev.filter(t => t !== timeId)
+                : [...prev, timeId]
+        );
     };
 
     const getSortedFlights = () => {
@@ -51,82 +136,192 @@ function FlightList() {
 
     const sortedFlights = getSortedFlights();
 
+    const clearFilters = () => {
+        setSelectedAirlines([]);
+        setPriceRange({ min: '', max: '' });
+        setSelectedTimes([]);
+        setSelectedClass('all');
+    };
+
+    const getAirlineCount = (airline) => {
+        return flights.filter(f => getAirlineName(f.flightNumber) === airline).length;
+    };
+
+    if (loading) {
+        return (
+            <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading flights...</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <SearchBar onSearch={handleSearch} />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Available Flights ({sortedFlights.length})</h2>
+            <div className="page-layout">
+                {/* Filter Sidebar */}
+                <aside className="filter-sidebar glass-card" style={{ padding: '1.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <h3 style={{ fontSize: '1rem', margin: 0 }}>Filters</h3>
+                        <button
+                            onClick={clearFilters}
+                            style={{
+                                color: 'var(--primary)',
+                                fontSize: '0.8rem',
+                                fontWeight: '500'
+                            }}
+                        >
+                            Clear All
+                        </button>
+                    </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <label style={{ fontWeight: 'bold' }}>Sort By:</label>
-                    <select
-                        value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
-                        style={{
-                            padding: '0.5rem',
-                            borderRadius: '8px',
-                            border: '1px solid #ccc',
-                            fontSize: '1rem'
-                        }}
-                    >
-                        <option value="priceLowHigh">Price: Low to High</option>
-                        <option value="priceHighLow">Price: High to Low</option>
-                        <option value="departureTime">Departure Time</option>
-                    </select>
-                </div>
-            </div>
-
-            {loading ? (
-                <p>Loading flights...</p>
-            ) : sortedFlights.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '12px' }}>
-                    <h3>No flights found matching your search.</h3>
-                    <p>Try different cities or clear the search.</p>
-                </div>
-            ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {sortedFlights.map(flight => (
-                        <div key={flight.id} className="flight-card glass-card">
-                            {/* Airline Info */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '200px' }}>
-                                <div style={{ fontSize: '2rem' }}>✈️</div>
-                                <div>
-                                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Srijan's Airlines</div>
-                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{flight.flightNumber}</div>
-                                </div>
+                    {/* Airlines Filter */}
+                    <div className="filter-section">
+                        <div className="filter-title">Airlines</div>
+                        {airlines.map(airline => (
+                            <div
+                                key={airline}
+                                className="filter-option"
+                                onClick={() => toggleAirline(airline)}
+                            >
+                                <div className={`filter-checkbox ${selectedAirlines.includes(airline) ? 'checked' : ''}`}></div>
+                                <span className="filter-label">{airline}</span>
+                                <span className="filter-count">{getAirlineCount(airline)}</span>
                             </div>
+                        ))}
+                    </div>
 
-                            {/* Route Info */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flex: 1, justifyContent: 'center' }}>
-                                <div style={{ textAlign: 'center' }}>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{flight.origin}</div>
-                                    <div style={{ color: '#718096', fontSize: '0.9rem' }}>{new Date(flight.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                                </div>
-                                <div style={{ color: '#cbd5e0', fontSize: '0.8rem' }}>2h 30m</div>
-                                <div style={{ textAlign: 'center' }}>
-                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{flight.destination}</div>
-                                    <div style={{ color: '#718096', fontSize: '0.9rem' }}>--:--</div>
-                                </div>
-                            </div>
-
-                            {/* Price & Action */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', minWidth: '250px', justifyContent: 'flex-end' }}>
-                                <div style={{ textAlign: 'right' }}>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-main)' }}>₹{flight.economyPrice}</div>
-                                    <div style={{ color: '#718096', fontSize: '0.8rem' }}>per adult</div>
-                                </div>
-                                <button
-                                    className="btn-primary"
-                                    onClick={() => navigate(`/book/${flight.id}`)}
-                                >
-                                    BOOK
-                                </button>
-                            </div>
+                    {/* Price Range Filter */}
+                    <div className="filter-section">
+                        <div className="filter-title">Price Range</div>
+                        <div className="price-inputs">
+                            <input
+                                type="number"
+                                placeholder="Min"
+                                value={priceRange.min}
+                                onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                            />
+                            <span>-</span>
+                            <input
+                                type="number"
+                                placeholder="Max"
+                                value={priceRange.max}
+                                onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                            />
                         </div>
-                    ))}
-                </div>
-            )}
+                    </div>
+
+                    {/* Departure Time Filter */}
+                    <div className="filter-section">
+                        <div className="filter-title">Departure Time</div>
+                        {timeSlots.map(slot => (
+                            <div
+                                key={slot.id}
+                                className="filter-option"
+                                onClick={() => toggleTime(slot.id)}
+                            >
+                                <div className={`filter-checkbox ${selectedTimes.includes(slot.id) ? 'checked' : ''}`}></div>
+                                <div>
+                                    <span className="filter-label">{slot.label}</span>
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{slot.range}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Class Filter */}
+                    <div className="filter-section">
+                        <div className="filter-title">Seat Class</div>
+                        <select
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                            style={{ marginTop: '0.5rem' }}
+                        >
+                            <option value="all">All Classes</option>
+                            <option value="economy">Economy Available</option>
+                            <option value="premium">Premium Available</option>
+                        </select>
+                    </div>
+                </aside>
+
+                {/* Main Content */}
+                <main>
+                    <div className="results-header">
+                        <div className="results-count">
+                            <span>{sortedFlights.length}</span> flights found
+                        </div>
+                        <div className="sort-select">
+                            <label>Sort by:</label>
+                            <select
+                                value={sortOption}
+                                onChange={(e) => setSortOption(e.target.value)}
+                            >
+                                <option value="priceLowHigh">Price: Low to High</option>
+                                <option value="priceHighLow">Price: High to Low</option>
+                                <option value="departureTime">Departure Time</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {sortedFlights.length === 0 ? (
+                        <div className="empty-state glass-card">
+                            <div className="icon">✈️</div>
+                            <h3>No flights found</h3>
+                            <p>Try adjusting your filters or search for different cities.</p>
+                        </div>
+                    ) : (
+                        <div>
+                            {sortedFlights.map(flight => (
+                                <div key={flight.id} className="flight-card glass-card">
+                                    {/* Airline Info */}
+                                    <div className="airline-info">
+                                        <div className="airline-logo">✈</div>
+                                        <div>
+                                            <div className="airline-name">{getAirlineName(flight.flightNumber)}</div>
+                                            <div className="flight-number">{flight.flightNumber}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Route Info */}
+                                    <div className="route-info">
+                                        <div className="city">
+                                            <div className="city-name">{flight.origin}</div>
+                                            <div className="city-time">
+                                                {new Date(flight.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                        </div>
+                                        <div className="duration">
+                                            <div className="duration-text">2h 30m</div>
+                                            <div className="duration-line"></div>
+                                            <div className="duration-text">Non-stop</div>
+                                        </div>
+                                        <div className="city">
+                                            <div className="city-name">{flight.destination}</div>
+                                            <div className="city-time">--:--</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Price & Action */}
+                                    <div className="price-section">
+                                        <div className="price">
+                                            <div className="price-amount">₹{flight.economyPrice.toLocaleString()}</div>
+                                            <div className="price-label">per adult</div>
+                                        </div>
+                                        <button
+                                            className="btn-primary"
+                                            onClick={() => navigate(`/book/${flight.id}`)}
+                                        >
+                                            BOOK NOW
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </main>
+            </div>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 package com.flightapp;
 
 import com.flightapp.model.Flight;
+import com.flightapp.repository.BookingRepository;
 import com.flightapp.repository.FlightRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,23 +18,28 @@ import java.util.Random;
 public class DataSeeder implements CommandLineRunner {
 
     private final FlightRepository flightRepository;
+    private final BookingRepository bookingRepository;
     private final Random random = new Random();
     private final String API_KEY = "50e4e3bb6ee6dbebee7920a45e72c06b";
 
-    public DataSeeder(FlightRepository flightRepository) {
+    public DataSeeder(FlightRepository flightRepository, BookingRepository bookingRepository) {
         this.flightRepository = flightRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        // ALWAYS clear old data to ensure we see the new API data
-        System.out.println("Clearing old flight data...");
-        flightRepository.deleteAll();
-
-        System.out.println("Seeding data from Aviationstack API...");
-        boolean apiSuccess = false;
-
+    public void run(String... args) {
         try {
+            // ALWAYS clear old data to ensure we see the new API data
+            System.out.println("Clearing old booking data...");
+            bookingRepository.deleteAll(); // Delete bookings first (foreign key constraint)
+            System.out.println("Clearing old flight data...");
+            flightRepository.deleteAll();
+
+            System.out.println("Seeding data from Aviationstack API...");
+            boolean apiSuccess = false;
+
+            try {
             RestTemplate restTemplate = new RestTemplate();
             // Using HTTP as per AviationStack Free Tier requirement
             String url = "http://api.aviationstack.com/v1/flights?access_key=" + API_KEY + "&limit=50";
@@ -85,15 +91,19 @@ public class DataSeeder implements CommandLineRunner {
                 apiSuccess = true;
                 System.out.println("Successfully seeded flights from Aviationstack.");
             }
-        } catch (Exception e) {
-            System.err.println("API Seeding Failed: " + e.getMessage());
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+                System.err.println("API Seeding Failed: " + e.getMessage());
+                e.printStackTrace();
+            }
 
-        // FALLBACK: If API failed or returned 0 flights, seed Manual Data
-        if (!apiSuccess || flightRepository.count() == 0) {
-            System.out.println("API failed or returned no data. Using Manual Fallback Seeder...");
-            seedManualData();
+            // FALLBACK: If API failed or returned 0 flights, seed Manual Data
+            if (!apiSuccess || flightRepository.count() == 0) {
+                System.out.println("API failed or returned no data. Using Manual Fallback Seeder...");
+                seedManualData();
+            }
+        } catch (Exception e) {
+            System.err.println("DataSeeder CRITICAL ERROR (application will continue): " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

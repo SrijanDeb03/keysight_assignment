@@ -4,39 +4,60 @@
   flex-direction: column;
 }
 
+/* Container */
 .container {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
   width: 100%;
 }
 
-/* Primary Button - Gold Gradient */
+/* ============================================
+   BUTTONS
+   ============================================ */
+
 .btn-primary {
-  background: var(--gradient-gold);
-  color: #000;
-  /* Black text on Gold */
-  padding: 0.8rem 2rem;
-  border-radius: 4px;
-  /* Sharper, more premium look */
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  background: var(--accent-gradient);
+  color: white;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-  background: #f1c40f;
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text-main);
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
 }
 
 .btn-logout {
   border: 1px solid var(--danger);
   color: var(--danger);
   padding: 0.5rem 1.25rem;
-  border-radius: 4px;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .btn-logout:hover {
@@ -44,99 +65,793 @@
   color: white;
 }
 
-/* Cards */
+/* ============================================
+   CARDS
+   ============================================ */
+
 .card {
   background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 1.5rem;
   color: var(--text-main);
+  transition: all 0.3s ease;
 }
 
-/* Inputs & Forms */
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--text-gold);
-  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 input,
 select {
-  padding: 1rem;
-  background: #0f131f;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  padding: 0.875rem 1rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   width: 100%;
-  color: white;
+  color: var(--text-main);
   font-family: inherit;
-  font-size: 1rem;
-  transition: all 0.2s;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+input::placeholder {
+  color: var(--text-muted);
 }
 
 input:focus,
 select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+  background: var(--bg-card);
 }
 
-/* Flight Card Specifics */
+/* ============================================
+   FLIGHT CARDS
+   ============================================ */
+
 .flight-card {
-  display: flex;
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1.5rem;
-  transition: transform 0.2s;
+  gap: 2rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .flight-card:hover {
-  transform: scale(1.01);
+  transform: translateX(4px);
   border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
 }
 
-/* Navbar Overrides */
+.flight-card .airline-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.flight-card .airline-logo {
+  width: 44px;
+  height: 44px;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.flight-card .airline-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.flight-card .flight-number {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.flight-card .route-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.flight-card .city {
+  text-align: center;
+}
+
+.flight-card .city-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.flight-card .city-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.flight-card .duration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 80px;
+}
+
+.flight-card .duration-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 1px;
+  position: relative;
+}
+
+.flight-card .duration-line::before,
+.flight-card .duration-line::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.flight-card .duration-line::before {
+  left: 0;
+}
+
+.flight-card .duration-line::after {
+  right: 0;
+  background: var(--accent);
+}
+
+.flight-card .duration-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.flight-card .price-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.flight-card .price {
+  text-align: right;
+}
+
+.flight-card .price-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.flight-card .price-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+
 .navbar {
-  background: rgba(11, 15, 25, 0.9) !important;
+  background: rgba(10, 15, 26, 0.9);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 1.2rem 2rem;
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navbar-brand a {
-  font-size: 1.6rem;
-  text-transform: uppercase;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: var(--text-gold) !important;
-  text-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navbar-links a {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
   margin-left: 2rem;
+  font-size: 0.9rem;
+  position: relative;
 }
 
 .navbar-links a:hover,
 .navbar-links a.active {
   color: var(--text-main);
-  text-decoration: underline;
-  text-decoration-color: var(--primary);
-  text-underline-offset: 6px;
 }
 
-/* Utilities */
-h2 {
-  border-left: 4px solid var(--primary);
-  padding-left: 1rem;
+.navbar-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-gradient);
+  border-radius: 1px;
+}
+
+.navbar-user {
+  color: var(--text-accent);
+  font-weight: 500;
+  margin-left: 2rem;
+}
+
+/* ============================================
+   FILTER SIDEBAR
+   ============================================ */
+
+.page-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.filter-sidebar {
+  position: sticky;
+  top: 100px;
+}
+
+.filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.filter-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-option:hover {
+  color: var(--text-accent);
+}
+
+.filter-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.filter-checkbox.checked {
+  background: var(--accent-gradient);
+  border-color: var(--primary);
+}
+
+.filter-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.filter-label {
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.filter-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 0.125rem 0.5rem;
+  border-radius: 10px;
+}
+
+.price-inputs {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.price-inputs input {
+  padding: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.price-inputs span {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   SEARCH HEADER
+   ============================================ */
+
+.search-header {
+  background: var(--accent-gradient);
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.search-header h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 0.75rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 100px;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.search-input-wrapper .icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.search-input-wrapper input {
+  background: transparent;
+  border: none;
+  padding-left: 2.75rem;
+  color: var(--bg-dark);
+}
+
+.search-input-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.search-input-wrapper input:focus {
+  box-shadow: none;
+  background: transparent;
+}
+
+.search-divider {
+  width: 1px;
+  height: 30px;
+  background: #e5e7eb;
+}
+
+/* ============================================
+   RESULTS HEADER
+   ============================================ */
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.results-count {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.results-count span {
+  color: var(--primary);
+}
+
+.sort-select {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sort-select label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.sort-select select {
+  width: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: var(--bg-card);
+}
+
+/* ============================================
+   PAGE SPECIFICS
+   ============================================ */
+
+/* Auth Pages */
+.auth-container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Booking Page */
+.booking-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.flight-summary-card {
+  position: sticky;
+  top: 100px;
+}
+
+.flight-route {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.flight-route .city {
+  text-align: center;
+}
+
+.flight-route .city h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.flight-route .city p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.flight-route .arrow {
+  flex: 1;
+  height: 2px;
+  background: var(--accent-gradient);
+  position: relative;
+}
+
+.flight-route .arrow::after {
+  content: '✈';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+}
+
+.price-breakdown {
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.price-row.total {
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.price-row.total .amount {
+  color: var(--primary);
+  font-size: 1.25rem;
+}
+
+.price-row.discount {
+  color: var(--success);
+}
+
+/* Payment Page */
+.payment-methods {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.payment-method-tab {
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s ease;
+}
+
+.payment-method-tab:hover {
+  color: var(--text-main);
+}
+
+.payment-method-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 500;
+}
+
+/* My Bookings */
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.5rem;
+}
+
+.booking-card {
+  padding: 1.5rem;
+}
+
+.booking-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.booking-card .flight-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.booking-card .route {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.confirmed {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.booking-card .details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.booking-card .details .label {
+  color: var(--text-muted);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-state .icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Success / Error States */
+.success-card {
+  text-align: center;
+  max-width: 450px;
+  margin: 3rem auto;
+  padding: 3rem;
+}
+
+.success-card .icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.success-card h2 {
+  color: var(--success);
+  margin-bottom: 0.5rem;
+}
+
+.success-card p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.error-card {
+  text-align: center;
+  max-width: 450px;
+  margin: 3rem auto;
+  padding: 3rem;
+  border-top: 4px solid var(--danger);
+}
+
+.error-card h2 {
+  color: var(--danger);
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-sidebar {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+
+  .booking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .flight-summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .flight-card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .flight-card .airline-info {
+    justify-content: center;
+  }
+
+  .flight-card .price-section {
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-form {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+  }
+
+  .search-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .search-form .btn-primary {
+    width: 100%;
+  }
 }

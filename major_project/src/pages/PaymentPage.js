@@ -8,9 +8,8 @@ function PaymentPage() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    // Payment States
-    const [status, setStatus] = useState('selection'); // selection, processing, success, error
-    const [method, setMethod] = useState('CARD'); // CARD, UPI, GPAY
+    const [status, setStatus] = useState('selection');
+    const [method, setMethod] = useState('CARD');
 
     useEffect(() => {
         if (!state || !state.booking) {
@@ -21,10 +20,8 @@ function PaymentPage() {
     const handlePayment = async () => {
         setStatus('processing');
         try {
-            // Simulate delay
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            // Send booking to backend
             const bookingPayload = state.booking;
             const config = {};
             if (user && user.authHeader) {
@@ -41,125 +38,171 @@ function PaymentPage() {
 
     if (!state || !state.booking) return null;
 
-    const { totalPrice } = state.booking;
+    const { totalPrice, passengerName, seatClass } = state.booking;
 
     return (
-        <div className="container" style={{ marginTop: '3rem', maxWidth: '800px' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Secure Payment</h2>
-
+        <div className="container" style={{ maxWidth: '900px', marginTop: '2rem' }}>
             {status === 'selection' && (
-                <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-                    {/* Left Side: Summary */}
-                    <div className="card" style={{ flex: 1, height: 'fit-content' }}>
-                        <h3>Order Summary</h3>
-                        <p><strong>Passenger:</strong> {state.booking.passengerName}</p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', marginTop: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
-                            <span>Total Amount:</span>
-                            <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>₹{totalPrice}</span>
-                        </div>
-                    </div>
+                <>
+                    <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Secure Payment</h2>
 
-                    {/* Right Side: Payment Methods */}
-                    <div className="card" style={{ flex: 2 }}>
-                        <h3>Choose Payment Method</h3>
-
-                        {/* Tabs */}
-                        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #eee' }}>
-                            {['CARD', 'UPI', 'GPAY'].map(m => (
-                                <div
-                                    key={m}
-                                    onClick={() => setMethod(m)}
-                                    style={{
-                                        padding: '1rem',
-                                        cursor: 'pointer',
-                                        borderBottom: method === m ? '3px solid var(--primary)' : 'none',
-                                        color: method === m ? 'var(--primary)' : '#aaa',
-                                        fontWeight: method === m ? 'bold' : 'normal'
-                                    }}
-                                >
-                                    {m === 'CARD' ? 'Debit/Credit Card' : (m === 'UPI' ? 'UPI / QR' : 'Google Pay')}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
+                        {/* Order Summary */}
+                        <div className="glass-card" style={{ padding: '1.5rem', height: 'fit-content' }}>
+                            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '1rem' }}>
+                                Order Summary
+                            </h3>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Passenger</div>
+                                <div style={{ fontWeight: '500' }}>{passengerName}</div>
+                            </div>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Class</div>
+                                <div style={{ fontWeight: '500' }}>{seatClass}</div>
+                            </div>
+                            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginTop: '1rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ color: 'var(--text-secondary)' }}>Total</span>
+                                    <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary)' }}>
+                                        ₹{totalPrice.toLocaleString()}
+                                    </span>
                                 </div>
-                            ))}
+                            </div>
                         </div>
 
-                        {/* Card Form */}
-                        {method === 'CARD' && (
-                            <div>
-                                <div className="form-group">
-                                    <label className="form-label">Card Number</label>
-                                    <input placeholder="XXXX XXXX XXXX XXXX" />
-                                </div>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label className="form-label">Expiry</label>
-                                        <input placeholder="MM/YY" />
+                        {/* Payment Methods */}
+                        <div className="glass-card" style={{ padding: '1.5rem' }}>
+                            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '1rem' }}>
+                                Payment Method
+                            </h3>
+
+                            <div className="payment-methods">
+                                {[
+                                    { id: 'CARD', label: 'Card', icon: '💳' },
+                                    { id: 'UPI', label: 'UPI', icon: '📱' },
+                                    { id: 'GPAY', label: 'GPay', icon: '🅖' }
+                                ].map(m => (
+                                    <button
+                                        key={m.id}
+                                        className={`payment-method-tab ${method === m.id ? 'active' : ''}`}
+                                        onClick={() => setMethod(m.id)}
+                                    >
+                                        <span style={{ marginRight: '0.5rem' }}>{m.icon}</span>
+                                        {m.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {method === 'CARD' && (
+                                <div style={{ marginTop: '1.5rem' }}>
+                                    <div className="form-group">
+                                        <label className="form-label">Card Number</label>
+                                        <input placeholder="1234 5678 9012 3456" />
                                     </div>
-                                    <div className="form-group" style={{ flex: 1 }}>
-                                        <label className="form-label">CVV</label>
-                                        <input type="password" placeholder="123" />
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label className="form-label">Expiry</label>
+                                            <input placeholder="MM/YY" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">CVV</label>
+                                            <input type="password" placeholder="•••" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Cardholder Name</label>
+                                        <input placeholder="Name on card" />
                                     </div>
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">Card Holder Name</label>
-                                    <input placeholder="Name on card" />
+                            )}
+
+                            {method === 'UPI' && (
+                                <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                                    <div style={{
+                                        width: '150px',
+                                        height: '150px',
+                                        background: 'white',
+                                        margin: '0 auto 1rem',
+                                        borderRadius: 'var(--radius-md)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'var(--bg-dark)'
+                                    }}>
+                                        [QR Code]
+                                    </div>
+                                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                                        Scan QR or enter UPI ID
+                                    </p>
+                                    <input placeholder="username@upi" style={{ maxWidth: '280px' }} />
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {/* UPI Form */}
-                        {method === 'UPI' && (
-                            <div style={{ textAlign: 'center' }}>
-                                <p>Scan QR to Pay</p>
-                                <div style={{ width: '150px', height: '150px', background: '#eee', margin: '1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    [QR Code Placeholder]
+                            {method === 'GPAY' && (
+                                <div style={{ textAlign: 'center', padding: '3rem' }}>
+                                    <div style={{
+                                        fontSize: '3rem',
+                                        marginBottom: '1rem'
+                                    }}>
+                                        💳
+                                    </div>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                                        Click below to pay with Google Pay
+                                    </p>
+                                    <button className="btn-secondary" style={{
+                                        background: 'white',
+                                        color: 'black',
+                                        padding: '0.75rem 2rem',
+                                        fontWeight: '600'
+                                    }}>
+                                        Open GPay
+                                    </button>
                                 </div>
-                                <p>Or enter VPA:</p>
-                                <input placeholder="username@upi" style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd' }} />
-                            </div>
-                        )}
+                            )}
 
-                        {/* GPay Form */}
-                        {method === 'GPAY' && (
-                            <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                <button style={{ background: 'black', color: 'white', padding: '1rem 2rem', borderRadius: '4px', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}>
-                                    Pay using GPay
-                                </button>
-                            </div>
-                        )}
-
-                        <button
-                            className="btn-primary"
-                            style={{ width: '100%', marginTop: '2rem' }}
-                            onClick={handlePayment}
-                        >
-                            Pay ₹{totalPrice}
-                        </button>
+                            <button
+                                className="btn-primary"
+                                style={{ width: '100%', marginTop: '1.5rem', padding: '1rem' }}
+                                onClick={handlePayment}
+                            >
+                                Pay ₹{totalPrice.toLocaleString()}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </>
             )}
 
             {status === 'processing' && (
-                <div className="card" style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
-                    <h2>Contacting Bank...</h2>
-                    <div style={{ marginTop: '2rem', fontSize: '3rem', animation: 'spin 1s infinite linear' }}>⏳</div>
-                    <p>Please wait...</p>
+                <div className="glass-card" style={{ maxWidth: '400px', margin: '3rem auto', textAlign: 'center', padding: '3rem' }}>
+                    <div className="loading-spinner" style={{ marginBottom: '1.5rem' }}></div>
+                    <h3>Processing Payment</h3>
+                    <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                        Please wait while we confirm your transaction...
+                    </p>
                 </div>
             )}
 
             {status === 'success' && (
-                <div className="card" style={{ maxWidth: '500px', margin: '0 auto', borderTop: '5px solid green', textAlign: 'center' }}>
-                    <h2 style={{ color: 'green' }}>Booking Successful! ✈️</h2>
-                    <p>Your ticket has been booked.</p>
-                    <div style={{ fontSize: '4rem', margin: '1rem' }}>✅</div>
-                    <button className="btn-primary" onClick={() => navigate('/my-bookings')}>View My Bookings</button>
+                <div className="success-card glass-card">
+                    <div className="icon">✅</div>
+                    <h2>Booking Confirmed!</h2>
+                    <p>Your flight has been successfully booked. Check your email for confirmation.</p>
+                    <button className="btn-primary" onClick={() => navigate('/my-bookings')}>
+                        View My Bookings
+                    </button>
                 </div>
             )}
 
             {status === 'error' && (
-                <div className="card" style={{ maxWidth: '500px', margin: '0 auto', borderTop: '5px solid red', textAlign: 'center' }}>
-                    <h2 style={{ color: 'red' }}>Payment Failed ❌</h2>
-                    <p>Transaction declined by bank.</p>
-                    <button className="btn-primary" onClick={() => setStatus('selection')}>Try Again</button>
+                <div className="error-card glass-card">
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>❌</div>
+                    <h2>Payment Failed</h2>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                        Transaction was declined. Please try again.
+                    </p>
+                    <button className="btn-primary" onClick={() => setStatus('selection')}>
+                        Try Again
+                    </button>
                 </div>
             )}
         </div>

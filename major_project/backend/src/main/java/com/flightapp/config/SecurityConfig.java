@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/flights/**").permitAll() // Allow viewing flights without login
+                        .requestMatchers("/actuator/**").permitAll() // Allow health checks for Eureka
                         .anyRequest().authenticated())
                 .httpBasic(basic -> {
                 }); // Use Basic Auth for now, or JWT if time permits. Basic is simpler for this
